@@ -14,8 +14,10 @@ export const createMainWindow = async (mainWindow: BrowserWindow): Promise<Brows
   mainWindow = new BrowserWindow({
     title: Constants.APP_NAME,
     show: false,
-    width: Constants.IS_DEV_ENV ? 1500 : 1200,
+    width: Constants.IS_DEV_ENV ? 1000 : 1200,
     height: 650,
+    minWidth: 1000,
+    minHeight: 450,
     useContentSize: true,
     webPreferences: Constants.DEFAULT_WEB_PREFERENCES
   })

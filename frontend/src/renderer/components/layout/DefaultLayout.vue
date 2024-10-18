@@ -17,6 +17,6 @@ import SideBarLayout from '@/renderer/components/layout/NavigationLayout.vue'
 
 <style>
 .v-main {
-  margin-left: -100px;
+  margin-left: -129px;
 }
 </style>

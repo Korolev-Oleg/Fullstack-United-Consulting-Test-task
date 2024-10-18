@@ -1,21 +1,39 @@
-import { nextTick, ref } from 'vue'
+import { ref } from 'vue'
+import { chartOptions } from '@/renderer/store/apexChartStore'
 
-export const chart = ref(null)
-export const updateChart = async (chart, store) => {
-  if (store.paused) return
-  await store.updateAllCharts()
-  await nextTick()
-  if (chart.updateSeries) {
-    chart.updateSeries([
-      { name: 'series-1', data: store.chartDataA },
-      { name: 'series-2', data: store.chartDataB },
-      { name: 'bar-1', data: store.chartDataBars }
-    ])
-    // currentSeries.forEach((isVisible, index) => {
-    //   chart.value.series
-    //   if (!isVisible) {
-    //     chart.value.toggleSeries(chart.value.seriesNames[index]);
-    //   }
-    // });
+interface ChartInstance {
+  hideSeries: (name: string) => void
+  toggleSeries: (name: string) => void
+  dispatchAction: (action: { type: string; name: string }) => void
+}
+export const chartRef = ref<ChartInstance | null>(null)
+
+export const collapseSeries = async (chartStore) => {
+  console.log('collapse series')
+  chartStore.chartsData.forEach((chartInstance, index) => {
+    console.log('is collapsed', index, chartInstance.isCollapsed)
+    if (chartInstance.isCollapsed) {
+      console.log(chartInstance)
+      chartRef.value?.hideSeries(chartInstance.name)
+    }
+  })
+}
+
+export const toggleSeries = (index) => {
+  const chartInstance = chartRef.value
+  console.log('toggle series', chartOptions.series)
+
+  if (chartInstance) {
+    const currentShow = chartOptions.series[0].show
+    chartOptions.series[index].show = !currentShow
+    chartInstance.dispatchAction({
+      type: 'legendToggleSelect',
+      name: chartOptions.series[index].name
+    })
   }
+}
+
+export const refreshChartData = (store) => {
+  store.refresh()
+  chartOptions.series = store.chartSeries
 }

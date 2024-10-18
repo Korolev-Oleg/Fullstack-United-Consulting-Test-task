@@ -21,3 +21,8 @@ app.add_middleware(
 async def charts(count: int, limit: int, sort: bool = False) -> ResponseSchema:
     data = [randint(0, limit) for i in range(count)]
     return ResponseSchema(data=sorted(data) if sort else data)
+
+@app.get("/chart/arrays")
+async def random_charts(count: int, minimum: int, maximum: int, sort: bool = False) -> ResponseSchema:
+    data = [[randint(minimum, maximum) for i in range(100)] for i in range(count)]
+    return ResponseSchema(data=sorted(data) if sort else data)

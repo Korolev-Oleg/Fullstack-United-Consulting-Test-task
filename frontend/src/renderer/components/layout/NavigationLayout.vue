@@ -1,27 +1,20 @@
 <script setup lang="ts">
-import { UseChartStore } from '@/renderer/store/charts'
-import { chart, updateChart } from '@/renderer/components/Chart/services'
+import { UseChartStore } from '@/renderer/store/apexChartStore'
+import { collapseSeries, toggleSeries } from '@/renderer/components/Chart/services'
+
 const chartStore = UseChartStore()
-const sort = (chartProps) => {
-  chartProps.sort = !chartProps.sort
-  updateChart(chart.value, chartStore)
+const toggleCheckbox = (chartInstance) => {
+  if (!chartInstance) return
+  chartInstance.isCollapsed = !chartInstance.isCollapsed
+  console.log(chartInstance.isCollapsed)
+  toggleSeries(chartInstance.name)
 }
 </script>
-
 <template>
-  <v-navigation-drawer app permanent>
-    <v-checkbox
-      label="Сортировка series-1"
-      @click="sort(chartStore.properties.startOpts.chartA)"
-    ></v-checkbox>
-    <v-checkbox
-      label="Сортировка series-2"
-      @click="sort(chartStore.properties.startOpts.chartB)"
-    ></v-checkbox>
-    <v-checkbox
-      label="Сортировка series-3"
-      @click="sort(chartStore.properties.startOpts.chartBar)"
-    ></v-checkbox>
+  <v-navigation-drawer permanent>
+    <div v-for="(chart, index) in chartStore.chartSeries">
+      <v-checkbox :model-value="true" :label="chart.name" @click="toggleSeries(index)"></v-checkbox>
+    </div>
   </v-navigation-drawer>
 
   <v-main style="height: 250px"></v-main>
